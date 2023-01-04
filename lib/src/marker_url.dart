@@ -18,7 +18,7 @@ String getMapMarkerUrl({
         url: Platform.isIOS ? 'comgooglemaps://' : 'geo:0,0',
         queryParams: {
           'q':
-              '${coords.latitude},${coords.longitude}${title != null && title.isNotEmpty ? '($title)' : ''}',
+              '${title != null && title.isNotEmpty ? '($title)' : ''}',
           'zoom': '$zoomLevel',
           ...(extraParams ?? {}),
         },
@@ -29,7 +29,7 @@ String getMapMarkerUrl({
         url: 'http://maps.google.com/maps',
         queryParams: {
           'q':
-              '${coords.latitude},${coords.longitude}${title != null && title.isNotEmpty ? '($title)' : ''}',
+              '${title != null && title.isNotEmpty ? '($title)' : ''}',
           'zoom': '$zoomLevel',
           ...(extraParams ?? {}),
         },
@@ -69,7 +69,7 @@ String getMapMarkerUrl({
       return Utils.buildUrl(
         url: 'http://maps.apple.com/maps',
         queryParams: {
-          'saddr': '${coords.latitude},${coords.longitude}',
+          'saddr': '${title}',
           ...(extraParams ?? {}),
         },
       );
