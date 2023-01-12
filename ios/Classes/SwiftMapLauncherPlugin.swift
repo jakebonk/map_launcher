@@ -97,14 +97,24 @@ private func showMarker(mapType: MapType, url: String, title: String, latitude: 
     switch mapType {
     case MapType.apple:
         let coordinate = CLLocationCoordinate2DMake(Double(latitude)!, Double(longitude)!)
-        let region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.02))
-        let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: nil)
-        let mapItem = MKMapItem(placemark: placemark)
-        let options = [
-            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: region.center),
-            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: region.span)]
-        mapItem.name = title
-        mapItem.openInMaps(launchOptions: options)
+                let region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.02))
+                let options = [
+                    MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: region.center),
+                    MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: region.span)]
+                let searchRequest = MKLocalSearch.Request()
+                searchRequest.naturalLanguageQuery = title
+                let search = MKLocalSearch(request: searchRequest)
+                search.start { response, error in
+                    guard let response = response else {
+                        print("Error: \(error?.localizedDescription ?? "Unknown error").")
+                        return
+                    }
+
+                    for item in response.mapItems {
+                        item.openInMaps(launchOptions: options)
+                        break
+                    }
+                }
     default:
         UIApplication.shared.open(URL(string:url)!, options: [:], completionHandler: nil)
 
